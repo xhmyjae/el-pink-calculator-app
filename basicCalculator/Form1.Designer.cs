@@ -376,6 +376,8 @@
             this.Name = "Form1";
             this.Text = "Calculator";
             this.Load += new System.EventHandler(this.Calculator_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.Resize += new System.EventHandler(this.Calculator_Resize);
             this.ResumeLayout(false);
         }

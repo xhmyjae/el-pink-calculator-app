@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design.Serialization;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -107,104 +108,297 @@ namespace basicCalculator
             control.Size = new Size(newWidth, newHeight);
         }
 
+        private float num1, num2, result;
+        private char operation;
+        private bool dec = false;
+
+        private void changeLabel(int numPressed)
+        {
+            if(dec)
+            {
+                int decimalCount = 0;
+                foreach (char c in displayLabel.Text)
+                {
+                    if (c == '.')
+                    {
+                        decimalCount++;
+                    }
+                }
+
+                if (decimalCount < 1)
+                {
+                    displayLabel.Text = displayLabel.Text + ".";
+                }
+
+                dec = false;
+            }
+            else
+            {
+                if(displayLabel.Text.Equals("0") == true && displayLabel.Text != null)
+                {
+                    displayLabel.Text = numPressed.ToString();
+                }
+                else if(displayLabel.Text.Equals("-0") == true)
+                {
+                    displayLabel.Text = "-" + numPressed.ToString();
+                }
+                else
+                {
+                    displayLabel.Text = displayLabel.Text + numPressed.ToString();
+                }
+            }
+        }
+
         private void zeroButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(0);
         }
 
         private void oneButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(1);
         }
 
         private void twoButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(2);
         }
 
         private void threeButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(3);
         }
 
         private void fourButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(4);
         }
 
         private void fiveButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(5);
         }
 
         private void sixButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(6);
         }
 
         private void sevenButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(7);
         }
 
         private void eightButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(8);
         }
 
         private void nineButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            changeLabel(9);
         }
 
         private void decimalButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            dec = true;
+            changeLabel(0);
         }
 
         private void plusMinusButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            displayLabel.Text = "-" + displayLabel.Text;
         }
 
         private void squareRootButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            num1 = float.Parse(displayLabel.Text);
+            if(num1 > 0)
+            {
+                double sqrt = Math.Sqrt(num1);
+                displayLabel.Text = sqrt.ToString();
+            }
         }
 
         private void clearButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            displayLabel.Text = "0";
+            num1 = 0;
+            num2 = 0;
+            result = 0;
+            operation = '\0';
+            dec = false;
         }
 
         private void backspaceButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            int stringLength = displayLabel.Text.Length;
+            if(stringLength > 1)
+            {
+                displayLabel.Text = displayLabel.Text.Substring(0, stringLength - 1);
+            }
+            else
+            {
+                displayLabel.Text = "0";
+            }
         }
 
         private void multiplyButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            num1 = float.Parse(displayLabel.Text);
+            operation = '*';
+            result *= num1;
+            displayLabel.Text = "";
         }
 
         private void divideButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            num1 = float.Parse(displayLabel.Text);
+            operation = '/';
+            result /= num1;
+            displayLabel.Text = "";
         }
 
         private void plusButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            num1 = float.Parse(displayLabel.Text);
+            operation = '+';
+            result += num1;
+            displayLabel.Text = "";
         }
 
         private void minusButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            num1 = float.Parse(displayLabel.Text);
+            operation = '-';
+            result -= num1;
+            displayLabel.Text = "";
         }
 
         private void equalButton_Click(object sender, EventArgs e)
         {
-            throw new System.NotImplementedException();
+            result = 0;
+            if(displayLabel.Text.Equals("0") == false)
+            {
+                switch (operation)
+                {
+                    case '+':
+                        num2 = float.Parse(displayLabel.Text);
+                        result = num1 + num2;
+                        break;
+                    case '-':
+                        num2 = float.Parse(displayLabel.Text);
+                        result = num1 - num2;
+                        break;
+                    case '*':
+                        num2 = float.Parse(displayLabel.Text);
+                        result = num1 * num2;
+                        break;
+                    case '/':
+                        num2 = float.Parse(displayLabel.Text);
+                        result = num1 / num2;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            displayLabel.Text = result.ToString();
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Enter:
+                    equalButton.PerformClick();
+                    break;
+                case Keys.Back:
+                    backspaceButton.PerformClick();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.NumPad0:
+                    zeroButton.PerformClick();
+                    break;
+                case Keys.D0:
+                    zeroButton.PerformClick();
+                    break;
+                case Keys.NumPad1:
+                    oneButton.PerformClick();
+                    break;
+                case Keys.D1:
+                    oneButton.PerformClick();
+                    break;
+                case Keys.NumPad2:
+                    twoButton.PerformClick();
+                    break;
+                case Keys.D2:
+                    twoButton.PerformClick();
+                    break;
+                case Keys.NumPad3:
+                    threeButton.PerformClick();
+                    break;
+                case Keys.D3:
+                    threeButton.PerformClick();
+                    break;
+                case Keys.NumPad4:
+                    fourButton.PerformClick();
+                    break;
+                case Keys.D4:
+                    fourButton.PerformClick();
+                    break;
+                case Keys.NumPad5:
+                    fiveButton.PerformClick();
+                    break;
+                case Keys.D5:
+                    fiveButton.PerformClick();
+                    break;
+                case Keys.NumPad6:
+                    sixButton.PerformClick();
+                    break;
+                case Keys.D6:
+                    sixButton.PerformClick();
+                    break;
+                case Keys.NumPad7:
+                    sevenButton.PerformClick();
+                    break;
+                case Keys.D7:
+                    sevenButton.PerformClick();
+                    break;
+                case Keys.NumPad8:
+                    eightButton.PerformClick();
+                    break;
+                case Keys.D8:
+                    eightButton.PerformClick();
+                    break;
+                case Keys.NumPad9:
+                    nineButton.PerformClick();
+                    break;
+                case Keys.D9:
+                    nineButton.PerformClick();
+                    break;
+                case Keys.Divide:
+                    divideButton.PerformClick();
+                    break;
+                case Keys.Multiply:
+                    multiplyButton.PerformClick();
+                    break;
+                case Keys.Subtract:
+                    minusButton.PerformClick();
+                    break;
+                case Keys.Add:
+                    plusButton.PerformClick();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
